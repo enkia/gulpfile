@@ -1,6 +1,6 @@
 # Gulp File Example
 
-This is an example of a gulp file.
+This is an example of a gulpfile.js
 
 ### Watches for:
 1) Changes to source asset image folder.
