@@ -65,7 +65,7 @@ gulp.task('build-js-header', function() {
         .pipe(argv.production ? uglify() : gutil.noop())
         .pipe(argv.production ? gutil.noop() : sourcemaps.write())
         .pipe(gulp.dest(config.public_html + '/js'));
-    //.pipe(browserSync.stream());
+    	//.pipe(browserSync.stream());
 });
 
 //Build JS footer
@@ -76,7 +76,7 @@ gulp.task('build-js-footer', function() {
         .pipe(argv.production ? uglify() : gutil.noop())
         .pipe(argv.production ? gutil.noop() : sourcemaps.write())
         .pipe(gulp.dest(config.public_html + '/js'));
-    //.pipe(browserSync.stream());
+    	//.pipe(browserSync.stream());
 });
 
 
