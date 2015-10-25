@@ -4,11 +4,11 @@
   "description": "Gulp File Example",
   "main": "gulpfile.js",
   "scripts": {
-    "test": "gulp test"
+    "test": "gulp"
   },
   "repository": {
     "type": "git",
-    "url": "git@gitserver.darkfires.com:/opt/git/needpublishinghelp.git"
+    "url": "https://github.com/enkia/gulpfile.git"
   },  
   "keywords": [
     "gulp",
