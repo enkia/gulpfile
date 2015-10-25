@@ -21,7 +21,7 @@ config = {
     img_assets: './PSD/assets/*.{png,jpg,svg}',
     sass: './source/scss/styles.scss',
     jscripts_header: './source/lib/*.js'
-        //'jscripts_footer': './source/lib/footer/*.js'
+    //'jscripts_footer': './source/lib/footer/*.js'
 };
 
 
