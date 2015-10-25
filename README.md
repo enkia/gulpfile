@@ -16,7 +16,7 @@ This is an example of a gulpfile.js
 4. Builds production ready files with the `--production` argument. 
 
 ###Commands
-```
+```bash
 gulp
 gulp build 
 gulp build --production
