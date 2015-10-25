@@ -9,5 +9,6 @@ This is an example of a gulp file.
 4) Builds production ready files.
 
 ###Arguments
-```gulp --production
+```
+gulp --production
 ```
