@@ -3,10 +3,10 @@
 This is an example of a gulpfile.js
 
 ### Watches for:
-1) Changes to source asset image folder.
-2) Changes to source SASS files.
-3) Changes to source Javascript files and libraries.
-4) Builds production ready files.
+1. Changes to source asset image folder.
+2. Changes to source SASS files.
+3. Changes to source Javascript files and libraries.
+4. Builds production ready files.
 
 ###Arguments
 ```
