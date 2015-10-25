@@ -37,7 +37,7 @@ gulp.task('build', ['build-css', 'build-js-header']);
 gulp.task('browser-sync', function() {
     browserSync.init({
         server: config.browsersyncloc,
-        //proxy: "edu.inventionlandinstitute.dev",
+        //proxy: "mydomainhere.dev",
         browser: "google chrome",
         index: config.indexfile
     });
