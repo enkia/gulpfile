@@ -15,8 +15,8 @@ var gulp = require('gulp');
 
 //config variables
 config = {
-    browsersyncloc: './templates',
-    public_html: './templates/templates/nph',
+    //browsersyncloc: './templates',
+    public_html: './templates',
     indexfile: 'page1.html',
     img_assets: './PSD/assets/*.{png,jpg,svg}',
     sass: './source/scss/styles.scss',
@@ -36,7 +36,7 @@ gulp.task('build', ['build-css', 'build-js-header']);
 //initiate browsersync
 gulp.task('browser-sync', function() {
     browserSync.init({
-        server: config.browsersyncloc,
+        server: config.public_html,
         //proxy: "mydomainhere.dev",
         browser: "google chrome",
         index: config.indexfile
