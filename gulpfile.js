@@ -29,7 +29,7 @@ config = {
 
 //default and build tasks
 gulp.task('default', ['watch', 'browser-sync']);
-gulp.task('build', ['build-css', 'build-js-header']);
+gulp.task('build', ['build-css', 'build-js-header', 'build-images']);
 //'build-images'
 
 
@@ -99,7 +99,7 @@ gulp.task('build-css', function() {
 
 
 
-//optimize images
+//optimize images for production only
 gulp.task('build-images', function() {
     if (argv.production) {
         return gulp.src(config.img_assets)
