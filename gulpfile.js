@@ -52,7 +52,7 @@ gulp.task('watch', function() {
     gulp.watch(config.public_html + '/**/*').on('change', browserSync.reload);
     gulp.src(config.img_assets) //watch for and copy new images from img assets
         .pipe(watch(config.img_assets))
-        .pipe(gulp.dest(config.public_html + '/img'));
+        .pipe(gulp.dest(config.public_html + '/images'));
 });
 
 
