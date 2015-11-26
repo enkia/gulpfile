@@ -12,6 +12,10 @@
   },
   "keywords": [
     "gulp",
+    "minify",
+    "concat",
+    "postcss",
+    "sass",
     "gulpfile",
     "gulpfile.js",
     "github"

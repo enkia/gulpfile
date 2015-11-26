@@ -14,7 +14,7 @@ var gulp = require('gulp');
     watch = require('gulp-watch');
 
 
-// config variables
+// config
 config = {
     public_root: './public',
     dist: './public/templates/dllp',
