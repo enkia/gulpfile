@@ -3,6 +3,7 @@ var gulp = require('gulp');
     gutil = require('gulp-util');
     argv = require('yargs').argv;
     browserSync = require('browser-sync').create();
+    changed = require('gulp-changed');
     concat = require('gulp-concat');
     cssnano = require('gulp-cssnano');
     imagemin = require('gulp-imagemin');
@@ -14,7 +15,7 @@ var gulp = require('gulp');
     watch = require('gulp-watch');
 
 
-// config
+// config variables
 config = {
     public_root: './public',
     dist: './public/templates/dllp',
@@ -50,7 +51,6 @@ gulp.task('watch', function () {
     gulp.watch(config.sass, ['build-css']);
     gulp.watch(config.jscripts_header, ['build-js']);
     gulp.watch(config.public_root + '/*.html', ['build-tpl']);
-    gulp.watch(config.public_root + '/*.html').on('change', browserSync.reload);
     gulp.watch(config.dist + '/**/*').on('change', browserSync.reload);
 
     //watch for and copy new images from img assets
@@ -64,6 +64,7 @@ gulp.task('watch', function () {
 // build TPL files
 gulp.task('build-tpl', function() {
     return gulp.src(config.public_root + '/*.html')
+    .pipe(changed(config.dist))
     .pipe(rename(function(path) {
         path.extname = path.basename == "privacy" ? '.html' : '.tpl';
     }))
@@ -73,10 +74,11 @@ gulp.task('build-tpl', function() {
 
 // build JS Header
 gulp.task('build-js', function() {
-  return gulp.src([
-    config.jquery,
-    config.jscripts_css_framework,
-    config.jscripts_header])
+    return gulp.src([
+        config.jquery,
+        config.jscripts_css_framework,
+        config.jscripts_header
+    ])
     .pipe(sourcemaps.init())
       .pipe(concat('header_bundle.js'))
       .pipe(argv.production ? uglify() : gutil.noop())
@@ -110,8 +112,7 @@ gulp.task('build-css', function() {
      ]))
     .pipe(argv.production ? cssnano({discardComments: {removeAll: true}}) : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
-    .pipe(gulp.dest(config.dist + '/css'))
-    .pipe(browserSync.stream());
+    .pipe(gulp.dest(config.dist + '/css'));
 });
 
 
