@@ -16,7 +16,7 @@
     "gulpfile.js",
     "github"
   ],
-  "author": "Kristi Russell",
+  "author": "enkia",
   "license": "ISC",
   "devDependencies": {
     "autoprefixer": "^6.1.1",
