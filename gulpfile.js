@@ -1,16 +1,16 @@
 //load gulp dependancies
 var gulp = require('gulp');
     gutil = require('gulp-util');
+    argv = require('yargs').argv;
     browserSync = require('browser-sync').create();
-    watch = require('gulp-watch');
+    concat = require('gulp-concat');
+    cssnano = require('gulp-cssnano');
+    imagemin = require('gulp-imagemin');
     postcss = require('gulp-postcss');
     sass = require('gulp-sass');
-    concat = require('gulp-concat');
-    uglify = require('gulp-uglify');
     sourcemaps = require('gulp-sourcemaps');
-    imagemin = require('gulp-imagemin');
-    cssnano = require('gulp-cssnano');
-    argv = require('yargs').argv;
+    uglify = require('gulp-uglify');
+    watch = require('gulp-watch');
 
 
 
