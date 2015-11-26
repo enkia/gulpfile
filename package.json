@@ -22,7 +22,7 @@
     "autoprefixer": "^6.1.1",
     "browser-sync": "^2.9.11",
     "css-mqpacker": "^4.0.0",
-    "foundation-sites": "^6.0.3",
+    "foundation-sites": "^6.0.4",
     "gulp": "^3.9.0",
     "gulp-concat": "^2.6.0",
     "gulp-cssnano": "^2.0.0",
