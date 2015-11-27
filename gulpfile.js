@@ -32,7 +32,7 @@ config = {
 
 // default and build tasks
 gulp.task('default', ['watch', 'browser-sync']);
-gulp.task('build', ['build-css', 'build-js', 'build-tpl', 'build-images']);
+gulp.task('build', ['build-css', 'build-js', 'build-tpl']);
 
 
 // initialize browsersync
@@ -123,7 +123,7 @@ gulp.task('build-fonts', function() {
 });
 
 
-// optimize images
+// optimize images - better to use TinyPNG API
 gulp.task('build-images', function() {
     if(argv.production) {
         return gulp.src(config.assets)
