@@ -3,7 +3,7 @@ var gulp = require('gulp');
     gutil = require('gulp-util');
     argv = require('yargs').argv;
     browserSync = require('browser-sync').create();
-    changed = require('gulp-changed');
+    cache = require('gulp-cached');
     concat = require('gulp-concat');
     cssnano = require('gulp-cssnano');
     imagemin = require('gulp-imagemin');
@@ -32,7 +32,7 @@ config = {
 
 // default and build tasks
 gulp.task('default', ['watch', 'browser-sync']);
-gulp.task('build', ['build-css', 'build-js', 'build-tpl']);
+gulp.task('build', ['build-css', 'build-js', 'build-tpl', 'build-images']);
 
 
 // initialize browsersync
@@ -51,7 +51,7 @@ gulp.task('watch', function () {
     gulp.watch(config.sass, ['build-css']);
     gulp.watch(config.jscripts_header, ['build-js']);
     gulp.watch(config.public_root + '/*.html', ['build-tpl']);
-    gulp.watch(config.dist + '/**/*').on('change', browserSync.reload);
+    gulp.watch(config.dist + '/**/*.{-map}').on('change', browserSync.reload);
 
     //watch for and copy new images from img assets
     gulp.src(config.assets)
@@ -64,7 +64,7 @@ gulp.task('watch', function () {
 // build TPL files
 gulp.task('build-tpl', function() {
     return gulp.src(config.public_root + '/*.html')
-    .pipe(changed(config.dist))
+    .pipe(cache('html'))
     .pipe(rename(function(path) {
         path.extname = path.basename == "privacy" ? '.html' : '.tpl';
     }))
