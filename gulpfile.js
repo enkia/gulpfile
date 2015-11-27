@@ -2,11 +2,13 @@
 var gulp = require('gulp');
     gutil = require('gulp-util');
     argv = require('yargs').argv;
+    autoprefixer = require('autoprefixer');
     browserSync = require('browser-sync').create();
     cache = require('gulp-cached');
     concat = require('gulp-concat');
     cssnano = require('gulp-cssnano');
     imagemin = require('gulp-imagemin');
+    mqpacker = require('css-mqpacker');
     postcss = require('gulp-postcss');
     rename = require('gulp-rename');
     sass = require('gulp-sass');
@@ -51,7 +53,7 @@ gulp.task('watch', function () {
     gulp.watch(config.sass, ['build-css']);
     gulp.watch(config.jscripts_header, ['build-js']);
     gulp.watch(config.public_root + '/*.html', ['build-tpl']);
-    gulp.watch(config.dist + '/**/*.{-map}').on('change', browserSync.reload);
+    gulp.watch(config.dist + '/**/*.{css,js,html,php,tpl,png,jpg,svg}').on('change', browserSync.reload);
 
     //watch for and copy new images from img assets
     gulp.src(config.assets)
@@ -107,8 +109,8 @@ gulp.task('build-css', function() {
         //require('postcss-scss'),
         //require('precss'),
         //require('lost'),
-        require('autoprefixer')({ browsers: ['last 2 versions', 'ie >= 9', 'and_chr >= 2.3'] }),
-        require('css-mqpacker')
+        autoprefixer({ browsers: ['last 3 versions'] }),
+        mqpacker
      ]))
     .pipe(argv.production ? cssnano({discardComments: {removeAll: true}}) : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
