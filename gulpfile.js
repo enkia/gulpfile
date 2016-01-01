@@ -16,125 +16,151 @@ var gulp = require('gulp');
     uglify = require('gulp-uglify');
     watch = require('gulp-watch');
 
-
-// config variables
-config = {
-    public_root: './public',
-    dist: './public/templates/dllp',
+//public_root: './public',
+//dist: './public/application/themes/sitename',
+// path variables
+path = {
+    dist: './template',
     indexfile: 'page1.html',
     assets: './source/assets/*.{png,jpg,svg}',
-    sass: './source/scss/**/*.scss',
-    jquery: './node_modules/jquery/dist/jquery.min.js',
-    css_framework: './node_modules/foundation-sites/scss',
-    jscripts_css_framework: '',
-    jscripts_header: './source/lib/header/*.js',
-    jscripts_footer: './source/lib/footer/*.js'
+    css: {
+        sass: './source/scss/**/*.scss',
+        framework: './node_modules/foundation-sites/scss',
+    },
+    jscripts: {
+        jquery: './node_modules/jquery/dist/jquery.min.js',
+        cssFramework: '',
+        header: '',//./source/lib/header/*.js',
+        footer: './source/lib/footer/*.js'
+    }
 };
 
 
 // default and build tasks
 gulp.task('default', ['watch', 'browser-sync']);
-gulp.task('build', ['build-css', 'build-js', 'build-tpl']);
+gulp.task('build', ['build-css', 'build-js']);
+gulp.task('css', ['build-css']);
+gulp.task('js', ['build-js']);
+gulp.task('tpl', ['build-tpl']);
+gulp.task('svg', ['build-svg']);
 
 
 // initialize browsersync
 gulp.task('browser-sync', function() {
     browserSync.init({
-        //proxy: "project.dev",
-        server: config.public_root,
+        //proxy: "devfront.ilandinst.dev",
+        server: path.dist,
         browser: "google chrome",
-        index: config.indexfile
+        index: path.indexfile,
+        notify: false
     });
 });
 
 
 // watch for events
 gulp.task('watch', function () {
-    gulp.watch(config.sass, ['build-css']);
-    gulp.watch(config.jscripts_header, ['build-js']);
-    gulp.watch(config.public_root + '/*.html', ['build-tpl']);
-    gulp.watch(config.dist + '/**/*.{css,js,html,php,tpl,png,jpg,svg}').on('change', browserSync.reload);
+    gulp.watch(path.css.sass, ['build-css']);
+    gulp.watch(path.jscripts.footer, ['build-js']);
+    //gulp.watch(path.public_root + '/*.html', ['build-tpl']);
+    gulp.watch(path.dist + '/**/*.{css,js,html,php,tpl,png,jpg,svg}').on('change', browserSync.reload);
 
-    //watch for and copy new images from img assets
-    gulp.src(config.assets)
-    .pipe(watch(config.assets))
-    .pipe(gulp.dest(config.dist + '/img'));
+    //watch for and copy new images from image assets
+    gulp.src(path.assets)
+    .pipe(watch(path.assets))
+    .pipe(gulp.dest(path.dist + '/images'));
+});
+
+
+
+// build JS Footer
+gulp.task('build-js', function() {
+    return gulp.src([
+        path.jscripts.jquery,
+        path.jscripts.cssFramework,
+        path.jscripts.footer
+    ])
+    .pipe(sourcemaps.init())
+      .pipe(concat('footer_bundle.js'))
+      .pipe(argv.production ? uglify() : gutil.noop())
+      .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
+    .pipe(gulp.dest(path.dist + '/js'))
+    .pipe(browserSync.stream());
+});
+
+
+// build JS Header
+gulp.task('build-js-header', function() {
+  return gulp.src(path.jscripts.header)
+    .pipe(sourcemaps.init())
+      .pipe(concat('header_bundle.js'))
+      .pipe(argv.production ? uglify() : gutil.noop())
+    .pipe(argv.production ? gutil.noop() : sourcemaps.write())
+    .pipe(gulp.dest(path.dist + '/js'));
+});
+
+
+// build CSS files
+gulp.task('build-css', function() {
+    return gulp.src(path.css.sass)
+    .pipe(sourcemaps.init())
+    .pipe(sass( {includePaths: [path.css.framework]} ).on('error', sass.logError))
+    .pipe(postcss([
+        //require('postcss-scss'),
+        //require('precss'),
+        //require('lost'),
+        autoprefixer({ browsers: ['last 3 versions', '> 5%', 'ie >= 8'] }),
+        mqpacker
+     ]))
+    .pipe(argv.production ? cssnano({discardComments: {removeAll: true}}) : gutil.noop())
+    .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
+    .pipe(gulp.dest(path.dist + '/css'))
+    .pipe(browserSync.stream());
 });
 
 
 
 // build TPL files
 gulp.task('build-tpl', function() {
-    return gulp.src(config.public_root + '/*.html')
+    return gulp.src(path.public_root + '/*.html')
     .pipe(cache('html'))
     .pipe(rename(function(path) {
         path.extname = path.basename == "privacy" ? '.html' : '.tpl';
     }))
-    .pipe(gulp.dest(config.dist));
-});
-
-
-// build JS Header
-gulp.task('build-js', function() {
-    return gulp.src([
-        config.jquery,
-        config.jscripts_css_framework,
-        config.jscripts_header
-    ])
-    .pipe(sourcemaps.init())
-      .pipe(concat('header_bundle.js'))
-      .pipe(argv.production ? uglify() : gutil.noop())
-      .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
-    .pipe(gulp.dest(config.dist + '/js'));
-});
-
-
-// build JS footer
-gulp.task('build-js-footer', function() {
-  return gulp.src(config.jscripts_footer)
-    .pipe(sourcemaps.init())
-      .pipe(concat('footer_bundle.js'))
-      .pipe(argv.production ? uglify() : gutil.noop())
-    .pipe(argv.production ? gutil.noop() : sourcemaps.write())
-    .pipe(gulp.dest(config.dist + '/js'));
-});
-
-
-// build CSS files
-gulp.task('build-css', function() {
-    return gulp.src(config.sass)
-    .pipe(sourcemaps.init())
-    .pipe(sass( {includePaths: [config.css_framework]} ).on('error', sass.logError))
-    .pipe(postcss([
-        //require('postcss-scss'),
-        //require('precss'),
-        //require('lost'),
-        autoprefixer({ browsers: ['last 3 versions'] }),
-        mqpacker
-     ]))
-    .pipe(argv.production ? cssnano({discardComments: {removeAll: true}}) : gutil.noop())
-    .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
-    .pipe(gulp.dest(config.dist + '/css'));
+    .pipe(gulp.dest(path.dist));
 });
 
 
 // build fonts
 gulp.task('build-fonts', function() {
-    return gulp.src(config.bootstrap + '/assets/fonts/**/*')
-    .pipe(gulp.dest(config.dist + '/css' + '/fonts'));
+    return gulp.src(path.bootstrap + '/assets/fonts/**/*')
+    .pipe(gulp.dest(path.dist + '/css' + '/fonts'));
 });
 
 
-// optimize images - better to use TinyPNG API
+// optimize images - better to use TinyPNG API on bitmaps
 gulp.task('build-images', function() {
     if(argv.production) {
-        return gulp.src(config.assets)
+        return gulp.src(path.assets + '/**/*.{png,jpg,svg}')
         .pipe(imagemin({
             optimizationLevel: 5,
             svgoPlugins: [{removeViewBox: false}]
         }))
-        .pipe(gulp.dest(config.dist + '/img'));
+        .pipe(gulp.dest(path.dist + '/images'));
     }
     else return false;
 });
+
+
+// optimize svg only
+gulp.task('build-svg', function() {
+    return gulp.src(path.assets + '/*.svg')
+    .pipe(cache('svg'))
+    .pipe(imagemin({
+        optimizationLevel: 5,
+        svgoPlugins: [{removeViewBox: false}]
+    }))
+    .pipe(gulp.dest(path.dist + '/images'));
+});
+
+
 
