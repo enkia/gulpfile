@@ -15,21 +15,21 @@ var gulp = require('gulp');
     sourcemaps = require('gulp-sourcemaps');
     uglify = require('gulp-uglify');
     watch = require('gulp-watch');
+    newer = require('gulp-newer');
 
 //public_root: './public',
-//dist: './public/application/themes/sitename',
 // path variables
 path = {
-    dist: './template',
-    indexfile: 'page1.html',
+    dist: './public/templates/longform1_2016',
     assets: './source/assets/*.{png,jpg,svg}',
+    index: 'template1.html',
     css: {
         sass: './source/scss/**/*.scss',
-        framework: './node_modules/foundation-sites/scss',
+        framework: ''//'./node_modules/foundation-sites/scss',
     },
     jscripts: {
-        jquery: './node_modules/jquery/dist/jquery.min.js',
-        cssFramework: '',
+        jquery: '',//'./node_modules/jquery/dist/jquery.min.js',
+        gridFramework: '',
         header: '',//./source/lib/header/*.js',
         footer: './source/lib/footer/*.js'
     }
@@ -38,7 +38,7 @@ path = {
 
 // default and build tasks
 gulp.task('default', ['watch', 'browser-sync']);
-gulp.task('build', ['build-css', 'build-js']);
+gulp.task('build', ['build-css', 'build-js', 'build-tpl']);
 gulp.task('css', ['build-css']);
 gulp.task('js', ['build-js']);
 gulp.task('tpl', ['build-tpl']);
@@ -48,10 +48,10 @@ gulp.task('svg', ['build-svg']);
 // initialize browsersync
 gulp.task('browser-sync', function() {
     browserSync.init({
-        //proxy: "devfront.ilandinst.dev",
         server: path.dist,
+        //proxy: "something.dev",
+        index: path.index,
         browser: "google chrome",
-        index: path.indexfile,
         notify: false
     });
 });
@@ -61,22 +61,21 @@ gulp.task('browser-sync', function() {
 gulp.task('watch', function () {
     gulp.watch(path.css.sass, ['build-css']);
     gulp.watch(path.jscripts.footer, ['build-js']);
-    //gulp.watch(path.public_root + '/*.html', ['build-tpl']);
-    gulp.watch(path.dist + '/**/*.{css,js,html,php,tpl,png,jpg,svg}').on('change', browserSync.reload);
-
+    gulp.watch(path.jscripts.footer, ['build-tpl']);
     //watch for and copy new images from image assets
-    gulp.src(path.assets)
+    /*gulp.src(path.assets)
     .pipe(watch(path.assets))
-    .pipe(gulp.dest(path.dist + '/images'));
+    .pipe(gulp.dest(path.dist + '/images'))
+    .pipe(gulp.dest(path.dist2 + '/images'));*/
+    //gulp.watch(path.dist + '/**/*.{html}').on('change', browserSync.reload);
 });
-
 
 
 // build JS Footer
 gulp.task('build-js', function() {
     return gulp.src([
         path.jscripts.jquery,
-        path.jscripts.cssFramework,
+        path.jscripts.gridFramework,
         path.jscripts.footer
     ])
     .pipe(sourcemaps.init())
@@ -95,20 +94,22 @@ gulp.task('build-js-header', function() {
       .pipe(concat('header_bundle.js'))
       .pipe(argv.production ? uglify() : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write())
-    .pipe(gulp.dest(path.dist + '/js'));
+    .pipe(gulp.dest(path.dist + '/js'))
+    .pipe(browserSync.stream());
 });
 
 
 // build CSS files
 gulp.task('build-css', function() {
     return gulp.src(path.css.sass)
+    .pipe(cache('scss'))
     .pipe(sourcemaps.init())
     .pipe(sass( {includePaths: [path.css.framework]} ).on('error', sass.logError))
     .pipe(postcss([
         //require('postcss-scss'),
         //require('precss'),
         //require('lost'),
-        autoprefixer({ browsers: ['last 3 versions', '> 5%', 'ie >= 8'] }),
+        autoprefixer({ browsers: ['last 3 versions', '> 5%', 'ie >= 8'] })
         mqpacker
      ]))
     .pipe(argv.production ? cssnano({discardComments: {removeAll: true}}) : gutil.noop())
@@ -121,12 +122,13 @@ gulp.task('build-css', function() {
 
 // build TPL files
 gulp.task('build-tpl', function() {
-    return gulp.src(path.public_root + '/*.html')
+    return gulp.src('./public/*.html')
     .pipe(cache('html'))
     .pipe(rename(function(path) {
-        path.extname = path.basename == "privacy" ? '.html' : '.tpl';
+        path.extname = path.basename == "privacy" ? '.html' : '.html';
     }))
-    .pipe(gulp.dest(path.dist));
+    .pipe(gulp.dest(path.dist))
+    .pipe(browserSync.stream());
 });
 
 
@@ -159,7 +161,7 @@ gulp.task('build-svg', function() {
         optimizationLevel: 5,
         svgoPlugins: [{removeViewBox: false}]
     }))
-    .pipe(gulp.dest(path.dist + '/images'));
+    .pipe(gulp.dest(path.assets + '/processed'));
 });
 
 
