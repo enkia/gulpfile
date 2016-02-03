@@ -109,7 +109,7 @@ gulp.task('build-css', function() {
         //require('postcss-scss'),
         //require('precss'),
         //require('lost'),
-        autoprefixer({ browsers: ['last 3 versions', '> 5%', 'ie >= 8'] })
+        autoprefixer({ browsers: ['last 3 versions', '> 5%', 'ie >= 8'] }),
         mqpacker
      ]))
     .pipe(argv.production ? cssnano({discardComments: {removeAll: true}}) : gutil.noop())
