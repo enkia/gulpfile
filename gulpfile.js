@@ -1,20 +1,20 @@
 // load gulp dependancies
-var gulp = require('gulp');
-    gutil = require('gulp-util');
-    argv = require('yargs').argv;
-    autoprefixer = require('autoprefixer');
-    browserSync = require('browser-sync').create();
-    cache = require('gulp-cached');
-    concat = require('gulp-concat');
-    cssnano = require('gulp-cssnano');
-    imagemin = require('gulp-imagemin');
-    mqpacker = require('css-mqpacker');
-    postcss = require('gulp-postcss');
-    rename = require('gulp-rename');
-    sass = require('gulp-sass');
-    sourcemaps = require('gulp-sourcemaps');
-    uglify = require('gulp-uglify');
-    watch = require('gulp-watch');
+var gulp = require('gulp'),
+    gutil = require('gulp-util'),
+    argv = require('yargs').argv,
+    autoprefixer = require('autoprefixer'),
+    browserSync = require('browser-sync').create(),
+    cache = require('gulp-cached'),
+    concat = require('gulp-concat'),
+    cssnano = require('gulp-cssnano'),
+    imagemin = require('gulp-imagemin'),
+    mqpacker = require('css-mqpacker'),
+    postcss = require('gulp-postcss'),
+    rename = require('gulp-rename'),
+    sass = require('gulp-sass'),
+    sourcemaps = require('gulp-sourcemaps'),
+    uglify = require('gulp-uglify'),
+    watch = require('gulp-watch'),
     newer = require('gulp-newer');
 
 //public_root: './public',
