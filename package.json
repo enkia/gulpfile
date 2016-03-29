@@ -23,7 +23,6 @@
   "author": "enkia",
   "license": "ISC",
   "devDependencies": {
-    "autoprefixer": "^6.1.1",
     "browser-sync": "^2.9.11",
     "css-mqpacker": "^4.0.0",
     "foundation-sites": "^6.0.4",

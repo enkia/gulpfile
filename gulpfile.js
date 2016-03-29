@@ -2,7 +2,6 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     argv = require('yargs').argv,
-    autoprefixer = require('autoprefixer'),
     browserSync = require('browser-sync').create(),
     cache = require('gulp-cached'),
     concat = require('gulp-concat'),
@@ -98,20 +97,17 @@ gulp.task('build-js-header', function() {
 });
 
 
-// build CSS files
+
+// Build CSS files
 gulp.task('build-css', function() {
     return gulp.src(path.css.sass)
-    .pipe(cache('scss'))
     .pipe(sourcemaps.init())
-    .pipe(sass({ includePaths: [path.css.framework] }).on('error', sass.logError))
-    .pipe(postcss([
-        //require('postcss-scss'),
-        //require('precss'),
-        //require('lost'),
-        autoprefixer({ browsers: ['last 3 versions', '> 5%', 'ie >= 8'] }),
-        mqpacker
-    ]))
-    .pipe(argv.production ? cssnano({ discardComments: { removeAll: true } }) : gutil.noop())
+    .pipe(sass( { includePaths: [path.css.framework] } ).on('error', sass.logError))
+    .pipe(postcss([mqpacker]))
+    .pipe(argv.production ? cssnano({
+        discardComments: { removeAll: true },
+        autoprefixer:  { browsers: ['last 3 versions', '> 5%', 'ie >= 8'], add: true }
+    }) : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
     .pipe(gulp.dest(path.dist + '/css'))
     .pipe(browserSync.stream());
