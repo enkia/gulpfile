@@ -120,7 +120,7 @@ gulp.task('build-tpl', function() {
     return gulp.src('./public/*.html')
     .pipe(cache('html'))
     .pipe(rename(function(path) {
-        path.extname = path.basename == 'privacy' ? '.html' : '.html';
+        path.extname = path.basename == 'privacy' ? '.html' : '.tpl';
     }))
     .pipe(gulp.dest(path.dist))
     .pipe(browserSync.stream());
