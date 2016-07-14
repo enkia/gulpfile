@@ -7,7 +7,7 @@ This is an example of a gulpfile.js
 2. Changes to source SASS files.
 3. Changes to HTML files
 4. Changes to source Javascript files and libraries.
-5. Changes to all source files and uses Browsersync to auto refresh the browser.
+5. Changes to all source files and uses Browsersync (optionally) to auto refresh the browser.
 
 ### Builds
 1. Moves any new images to production location.
@@ -20,6 +20,7 @@ This is an example of a gulpfile.js
 ### Commands
 ```bash
 gulp
+gulp --browsersync
 gulp build
 gulp build --production
 ```

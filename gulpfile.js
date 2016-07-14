@@ -45,13 +45,15 @@ gulp.task('svg', ['build-svg']);
 
 // initialize browsersync
 gulp.task('browser-sync', function() {
-    browserSync.init({
-        server: path.dist,
-        //proxy: "something.dev",
-        index: path.index,
-        browser: 'google chrome',
-        notify: false
-    });
+    if(argv.browsersync) {
+        browserSync.init({
+            server: path.dist,
+            //proxy: "something.dev",
+            index: path.index,
+            browser: 'google chrome',
+            notify: false
+        });
+    }
 });
 
 
@@ -81,7 +83,7 @@ gulp.task('build-js', function() {
       .pipe(argv.production ? uglify() : gutil.noop())
       .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
     .pipe(gulp.dest(path.dist + '/js'))
-    .pipe(browserSync.stream());
+    .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
 
@@ -93,7 +95,7 @@ gulp.task('build-js-header', function() {
       .pipe(argv.production ? uglify() : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write())
     .pipe(gulp.dest(path.dist + '/js'))
-    .pipe(browserSync.stream());
+    .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
 
@@ -110,7 +112,7 @@ gulp.task('build-css', function() {
     }) : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
     .pipe(gulp.dest(path.dist + '/css'))
-    .pipe(browserSync.stream());
+    .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
 
@@ -123,7 +125,7 @@ gulp.task('build-tpl', function() {
         path.extname = path.basename == 'privacy' ? '.html' : '.tpl';
     }))
     .pipe(gulp.dest(path.dist))
-    .pipe(browserSync.stream());
+    .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
 
