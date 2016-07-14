@@ -1,6 +1,6 @@
 # Gulp File Example
 
-This is an example of a gulpfile.js
+This is an example of a gulpfile.js file.
 
 ### Watches for:
 1. Changes to source asset image folder.
@@ -9,7 +9,7 @@ This is an example of a gulpfile.js
 4. Changes to source Javascript files and libraries.
 5. Changes to all source files and uses Browsersync (optionally) to auto refresh the browser.
 
-### Builds
+### Builds:
 1. Moves any new images to production location.
 2. Compiles SASS files into CSS and adds neccessary browser prefixes.
 3. Moves and renames HTML files to *.tpl
