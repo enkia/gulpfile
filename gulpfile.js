@@ -15,10 +15,11 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     watch = require('gulp-watch');
 
-//public_root: './public',
-// path variables
-var path = {
-    dist: './public/templates/longform1_2016',
+
+// Config
+var config = {
+    dist: './path/to/dist/folder',
+    //server: './public',
     assets: './source/assets/*.{png,jpg,svg}',
     index: 'template1.html',
     css: {
@@ -30,11 +31,17 @@ var path = {
         gridFramework: '',
         header: '',//./source/lib/header/*.js',
         footer: './source/lib/footer/*.js'
+    },
+    sftp: {
+        host: 'server.host.com',
+        user: 'username',
+        passphrase: 'password',
+        remotePath: '/path/to/remote/dist/folder/'
     }
 };
 
 
-// default and build tasks
+// Default and build tasks
 gulp.task('default', ['watch', 'browser-sync']);
 gulp.task('build', ['build-css', 'build-js', 'build-tpl']);
 gulp.task('css', ['build-css']);
@@ -43,13 +50,13 @@ gulp.task('tpl', ['build-tpl']);
 gulp.task('svg', ['build-svg']);
 
 
-// initialize browsersync
+// Initialize browsersync
 gulp.task('browser-sync', function() {
     if(argv.browsersync) {
         browserSync.init({
-            server: path.dist,
+            server: config.dist, //config.server,
             //proxy: "something.dev",
-            index: path.index,
+            index: config.index,
             browser: 'google chrome',
             notify: false
         });
@@ -57,44 +64,56 @@ gulp.task('browser-sync', function() {
 });
 
 
-// watch for events
+// Watch for events
 gulp.task('watch', function() {
-    gulp.watch(path.css.sass, ['build-css']);
-    gulp.watch(path.jscripts.footer, ['build-js']);
-    gulp.watch(path.jscripts.footer, ['build-tpl']);
+    gulp.watch(config.css.sass, ['build-css']);
+    gulp.watch(config.jscripts.footer, ['build-js']);
+    gulp.watch(config.jscripts.footer, ['build-tpl']);
     //watch for and copy new images from image assets
-    /*gulp.src(path.assets)
-    .pipe(watch(path.assets))
-    .pipe(gulp.dest(path.dist + '/images'))
-    .pipe(gulp.dest(path.dist2 + '/images'));*/
-    //gulp.watch(path.dist + '/**/*.{html}').on('change', browserSync.reload);
+    /*gulp.src(config.assets)
+    .pipe(watch(config.assets))
+    .pipe(gulp.dest(config.dist + '/images'))
+    .pipe(gulp.dest(config.dist2 + '/images'));*/
+    //gulp.watch(config.dist + '/**/*.{html}').on('change', browserSync.reload);
 });
 
 
 // build JS Footer
 gulp.task('build-js', function() {
     return gulp.src([
-        path.jscripts.jquery,
-        path.jscripts.gridFramework,
-        path.jscripts.footer
+        config.jscripts.jquery,
+        config.jscripts.gridFramework,
+        config.jscripts.footer
     ])
     .pipe(sourcemaps.init())
       .pipe(concat('footer_bundle.js'))
       .pipe(argv.production ? uglify() : gutil.noop())
       .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
-    .pipe(gulp.dest(path.dist + '/js'))
+    .pipe(gulp.dest(config.dist + '/js'))
+    .pipe((argv.production && argv.ftp) ? sftp({
+        host: config.sftp.host,
+        user: config.sftp.user,
+        passphrase: config.sftp.passphrase,
+        remotePath: config.sftp.remotePath
+        }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
 
 // build JS Header
 gulp.task('build-js-header', function() {
-    return gulp.src(path.jscripts.header)
+    return gulp.src(config.jscripts.header)
     .pipe(sourcemaps.init())
       .pipe(concat('header_bundle.js'))
       .pipe(argv.production ? uglify() : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write())
-    .pipe(gulp.dest(path.dist + '/js'))
+    .pipe(gulp.dest(config.dist + '/js'))
+    .pipe((argv.production && argv.ftp) ? sftp({
+        host: config.sftp.host,
+        user: config.sftp.user,
+        passphrase: config.sftp.passphrase,
+        remotePath: config.sftp.remotePath
+        }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
@@ -102,64 +121,76 @@ gulp.task('build-js-header', function() {
 
 // Build CSS files
 gulp.task('build-css', function() {
-    return gulp.src(path.css.sass)
+    return gulp.src(config.css.sass)
     .pipe(sourcemaps.init())
-    .pipe(sass( { includePaths: [path.css.framework] } ).on('error', sass.logError))
+    .pipe(sass( { includePaths: [config.css.framework] } ).on('error', sass.logError))
     .pipe(postcss([mqpacker]))
     .pipe(argv.production ? cssnano({
         discardComments: { removeAll: true },
         autoprefixer:  { browsers: ['last 3 versions', '> 5%', 'ie >= 8'], add: true }
     }) : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
-    .pipe(gulp.dest(path.dist + '/css'))
+    .pipe(gulp.dest(config.dist + '/css'))
+    .pipe((argv.production && argv.ftp) ? sftp({
+        host: config.sftp.host,
+        user: config.sftp.user,
+        passphrase: config.sftp.passphrase,
+        remotePath: config.sftp.remotePath
+        }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
 
 
-// build TPL files
+// Build TPL files
 gulp.task('build-tpl', function() {
     return gulp.src('./public/*.html')
     .pipe(cache('html'))
     .pipe(rename(function(path) {
         path.extname = path.basename == 'privacy' ? '.html' : '.tpl';
     }))
-    .pipe(gulp.dest(path.dist))
+    .pipe(gulp.dest(config.dist))
+    .pipe((argv.production && argv.ftp) ? sftp({
+        host: config.sftp.host,
+        user: config.sftp.user,
+        passphrase: config.sftp.passphrase,
+        remotePath: config.sftp.remotePath
+        }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
 
-// build fonts
+// Build fonts
 gulp.task('build-fonts', function() {
-    return gulp.src(path.bootstrap + '/assets/fonts/**/*')
-    .pipe(gulp.dest(path.dist + '/css' + '/fonts'));
+    return gulp.src(config.bootstrap + '/assets/fonts/**/*')
+    .pipe(gulp.dest(config.dist + '/css' + '/fonts'));
 });
 
 
-// optimize images - better to use TinyPNG API on bitmaps
+// Optimize images - better to use TinyPNG API on bitmaps
 gulp.task('build-images', function() {
     if (argv.production) {
-        return gulp.src(path.assets + '/**/*.{png,jpg,svg}')
+        return gulp.src(config.assets + '/**/*.{png,jpg,svg}')
         .pipe(imagemin({
             optimizationLevel: 5,
             svgoPlugins: [{ removeViewBox: false }]
         }))
-        .pipe(gulp.dest(path.dist + '/images'));
+        .pipe(gulp.dest(config.dist + '/images'));
     } else {
         return false;
     }
 });
 
 
-// optimize svg only
+// Optimize svg only
 gulp.task('build-svg', function() {
-    return gulp.src(path.assets + '/*.svg')
+    return gulp.src(config.assets + '/*.svg')
     .pipe(cache('svg'))
     .pipe(imagemin({
         optimizationLevel: 5,
         svgoPlugins: [{ removeViewBox: false }]
     }))
-    .pipe(gulp.dest(path.assets + '/processed'));
+    .pipe(gulp.dest(config.assets + '/processed'));
 });
 
 

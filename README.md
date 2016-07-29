@@ -16,6 +16,7 @@ This is an example of a gulpfile.js file.
 4. Concatenates and Uglifies JavaScript files.
 5. Builds source maps for both CSS and JS files.
 6. Builds production ready files with the `--production` argument.
+7. Uploads production ready files with the `--production --ftp` argument.
 
 ### Commands
 ```bash
@@ -23,4 +24,5 @@ gulp
 gulp --browsersync
 gulp build
 gulp build --production
+gulp build --production --ftp
 ```
