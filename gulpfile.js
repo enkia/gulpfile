@@ -2,6 +2,7 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     argv = require('yargs').argv,
+    autoprefixer = require('autoprefixer'),
     browserSync = require('browser-sync').create(),
     cache = require('gulp-cached'),
     concat = require('gulp-concat'),
@@ -13,15 +14,18 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     sourcemaps = require('gulp-sourcemaps'),
     uglify = require('gulp-uglify'),
-    watch = require('gulp-watch');
+    watch = require('gulp-watch'),
+    newer = require('gulp-newer'),
+    open = require('gulp-open');
+    sftp = require('gulp-sftp');
 
 
 // Config
 var config = {
-    dist: './path/to/dist/folder',
+    dist: './dist',
     //server: './public',
     assets: './source/assets/*.{png,jpg,svg}',
-    index: 'template1.html',
+    index: 'index.html',
     css: {
         sass: './source/scss/**/*.scss',
         framework: ''//'./node_modules/foundation-sites/scss',
@@ -35,7 +39,7 @@ var config = {
     sftp: {
         host: 'server.host.com',
         user: 'username',
-        passphrase: 'password',
+        passphrase: '',
         remotePath: '/path/to/remote/dist/folder/'
     }
 };
@@ -182,16 +186,17 @@ gulp.task('build-images', function() {
 });
 
 
-// Optimize svg only
+// Optimize svg and open in editor
 gulp.task('build-svg', function() {
-    return gulp.src(config.assets + '/*.svg')
-    .pipe(cache('svg'))
+    return gulp.src(config.assets.svg)
+    .pipe(watch(config.assets.svg))
+    //.pipe(cache('svg'))
     .pipe(imagemin({
         optimizationLevel: 5,
-        svgoPlugins: [{ removeViewBox: false }]
+        svgoPlugins: [{removeViewBox: false}]
     }))
+    .pipe(open({app: 'Sublime Text'}))
     .pipe(gulp.dest(config.assets + '/processed'));
 });
-
 
 
