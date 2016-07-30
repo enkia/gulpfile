@@ -76,13 +76,12 @@ gulp.task('watch', function() {
     //watch for and copy new images from image assets
     /*gulp.src(config.assets)
     .pipe(watch(config.assets))
-    .pipe(gulp.dest(config.dist + '/images'))
-    .pipe(gulp.dest(config.dist2 + '/images'));*/
+    .pipe(gulp.dest(config.dist + '/images'));*/
     //gulp.watch(config.dist + '/**/*.{html}').on('change', browserSync.reload);
 });
 
 
-// build JS Footer
+// Build JS Footer
 gulp.task('build-js', function() {
     return gulp.src([
         config.jscripts.jquery,
@@ -104,7 +103,7 @@ gulp.task('build-js', function() {
 });
 
 
-// build JS Header
+// Build JS Header
 gulp.task('build-js-header', function() {
     return gulp.src(config.jscripts.header)
     .pipe(sourcemaps.init())
