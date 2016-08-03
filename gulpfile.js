@@ -19,7 +19,6 @@ var gulp = require('gulp'),
 
 
 // Config
-
 var config = {
     dist: './dist',
     //server: './public',
