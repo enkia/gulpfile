@@ -8,17 +8,18 @@ var gulp = require('gulp'),
     cssnano = require('gulp-cssnano'),
     imagemin = require('gulp-imagemin'),
     mqpacker = require('css-mqpacker'),
+    open = require('gulp-open'),
     postcss = require('gulp-postcss'),
     rename = require('gulp-rename'),
     sass = require('gulp-sass'),
+    sftp = require('gulp-sftp'),
     sourcemaps = require('gulp-sourcemaps'),
     uglify = require('gulp-uglify'),
-    watch = require('gulp-watch'),
-    open = require('gulp-open'),
-    sftp = require('gulp-sftp');
+    watch = require('gulp-watch');
 
 
 // Config
+
 var config = {
     dist: './dist',
     //server: './public',
@@ -31,7 +32,6 @@ var config = {
     jscripts: {
         jquery: '',//'./node_modules/jquery/dist/jquery.min.js',
         gridFramework: '',
-        header: '',//./source/lib/header/*.js',
         footer: './source/lib/footer/*.js'
     },
     sftp: {
@@ -79,7 +79,7 @@ gulp.task('watch', function() {
 });
 
 
-// Build JS Footer
+// Build JS
 gulp.task('build-js', function() {
     return gulp.src([
         config.jscripts.jquery,
@@ -99,25 +99,6 @@ gulp.task('build-js', function() {
     }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
-
-
-// Build JS Header
-gulp.task('build-js-header', function() {
-    return gulp.src(config.jscripts.header)
-    .pipe(sourcemaps.init())
-      .pipe(concat('header_bundle.js'))
-      .pipe(argv.production ? uglify() : gutil.noop())
-    .pipe(argv.production ? gutil.noop() : sourcemaps.write())
-    .pipe(gulp.dest(config.dist + '/js'))
-    .pipe((argv.production && argv.ftp) ? sftp({
-        host: config.sftp.host,
-        user: config.sftp.user,
-        passphrase: config.sftp.passphrase,
-        remotePath: config.sftp.remotePath
-    }) : gutil.noop())
-    .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
-});
-
 
 
 // Build CSS files
