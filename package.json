@@ -22,6 +22,17 @@
   ],
   "author": "enkia",
   "license": "ISC",
+  "eslintConfig": {
+    "env": {
+      "browser": true
+    },
+    "rules": {
+      "indent": [
+        "error",
+        4
+      ]
+    }
+  },
   "devDependencies": {
     "autoprefixer": "^6.3.7",
     "browser-sync": "^2.9.11",

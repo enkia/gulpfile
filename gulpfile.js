@@ -2,7 +2,6 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     argv = require('yargs').argv,
-    autoprefixer = require('autoprefixer'),
     browserSync = require('browser-sync').create(),
     cache = require('gulp-cached'),
     concat = require('gulp-concat'),
@@ -15,8 +14,7 @@ var gulp = require('gulp'),
     sourcemaps = require('gulp-sourcemaps'),
     uglify = require('gulp-uglify'),
     watch = require('gulp-watch'),
-    newer = require('gulp-newer'),
-    open = require('gulp-open');
+    open = require('gulp-open'),
     sftp = require('gulp-sftp');
 
 
@@ -98,7 +96,7 @@ gulp.task('build-js', function() {
         user: config.sftp.user,
         passphrase: config.sftp.passphrase,
         remotePath: config.sftp.remotePath
-        }) : gutil.noop())
+    }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
@@ -116,7 +114,7 @@ gulp.task('build-js-header', function() {
         user: config.sftp.user,
         passphrase: config.sftp.passphrase,
         remotePath: config.sftp.remotePath
-        }) : gutil.noop())
+    }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
@@ -139,7 +137,7 @@ gulp.task('build-css', function() {
         user: config.sftp.user,
         passphrase: config.sftp.passphrase,
         remotePath: config.sftp.remotePath
-        }) : gutil.noop())
+    }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
@@ -158,7 +156,7 @@ gulp.task('build-tpl', function() {
         user: config.sftp.user,
         passphrase: config.sftp.passphrase,
         remotePath: config.sftp.remotePath
-        }) : gutil.noop())
+    }) : gutil.noop())
     .pipe(argv.browsersync ? browserSync.stream() : gutil.noop());
 });
 
