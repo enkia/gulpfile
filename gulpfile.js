@@ -43,7 +43,7 @@ var config = {
 
 
 // Default and build tasks
-gulp.task('default', ['watch', 'browser-sync']);
+argv.browsersync ? gulp.task('default', ['watch', 'browser-sync']) : gulp.task('default', ['watch']);
 gulp.task('build', ['build-css', 'build-js', 'build-tpl']);
 gulp.task('css', ['build-css']);
 gulp.task('js', ['build-js']);
@@ -74,7 +74,7 @@ gulp.task('watch', function() {
     /*gulp.src(config.assets)
     .pipe(watch(config.assets))
     .pipe(gulp.dest(config.dist + '/images'));*/
-    if(argv.browsersync)
+    if(argv.browsersync) {
         gulp.watch(config.server + '/**/*.{html}').on('change', browserSync.reload);
     }
 });
