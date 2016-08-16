@@ -75,7 +75,7 @@ gulp.task('watch', function() {
     .pipe(watch(config.assets))
     .pipe(gulp.dest(config.dist + '/images'));*/
     if(argv.browsersync) {
-        gulp.watch(config.server + '/**/*.{html}').on('change', browserSync.reload);
+        gulp.watch(config.server + '/**/*.html').on('change', browserSync.reload);
     }
 });
 
