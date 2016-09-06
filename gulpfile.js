@@ -53,13 +53,11 @@ gulp.task('svg', ['build-svg']);
 
 // Initialize browsersync
 gulp.task('browser-sync', function() {
-    browserSync.init({
-        server: config.dist, //config.server,
-        //proxy: "something.dev",
-        index: config.index,
-        browser: 'google chrome',
-        notify: false
-    });
+    server: config.dist, //config.server,
+    //proxy: "something.dev",
+    index: config.index,
+    browser: 'google chrome',
+    notify: false
 });
 
 
