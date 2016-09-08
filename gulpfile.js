@@ -88,7 +88,7 @@ gulp.task('build-js', function() {
       .pipe(argv.production ? uglify() : gutil.noop())
       .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
     .pipe(gulp.dest(config.dist + '/js'))
-    .pipe((argv.production && argv.ftp) ? sftp({
+    .pipe(argv.ftp ? sftp({
         host: config.sftp.host,
         user: config.sftp.user,
         passphrase: config.sftp.passphrase,
@@ -110,7 +110,7 @@ gulp.task('build-css', function() {
     }) : gutil.noop())
     .pipe(argv.production ? gutil.noop() : sourcemaps.write('./'))
     .pipe(gulp.dest(config.dist + '/css'))
-    .pipe((argv.production && argv.ftp) ? sftp({
+    .pipe(argv.ftp ? sftp({
         host: config.sftp.host,
         user: config.sftp.user,
         passphrase: config.sftp.passphrase,
@@ -129,7 +129,7 @@ gulp.task('build-tpl', function() {
         path.extname = path.basename == 'privacy' ? '.html' : '.tpl';
     }))
     .pipe(gulp.dest(config.dist))
-    .pipe((argv.production && argv.ftp) ? sftp({
+    .pipe(argv.ftp ? sftp({
         host: config.sftp.host,
         user: config.sftp.user,
         passphrase: config.sftp.passphrase,
