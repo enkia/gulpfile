@@ -1,4 +1,4 @@
-// load gulp dependancies
+// Load gulp dependancies
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     argv = require('yargs').argv,
